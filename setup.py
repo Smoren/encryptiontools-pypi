@@ -39,7 +39,7 @@ setuptools.setup(
     python_requires='>=3.7',
     install_requires=['rsa', 'cryptography'],
     extras_require={
-        'dev': ['check-manifest'],
-        # 'test': ['coverage'],
+        'dev': ['check-manifest', 'coverage'],
+        'test': ['coverage'],
     },
 )
