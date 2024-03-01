@@ -26,11 +26,9 @@ def get_key_pair(key_len: int) -> [bytes, bytes]:
     return priv_key.save_pkcs1(), pub_key.save_pkcs1()
 
 
-def data_provider_for_key_pair() -> Generator[Tuple[bytes, bytes], None, None]:
-    yield get_key_pair(128)
-    yield get_key_pair(256)
-    yield get_key_pair(512)
-    yield get_key_pair(1024)
+def data_provider_for_key_pair(min_degree: int = 7, max_degree: int = 10) -> Generator[Tuple[bytes, bytes], None, None]:
+    for i in range(min_degree, max_degree+1):
+        yield get_key_pair(2**i)
 
 
 def data_provider_for_key() -> Generator[bytes, None, None]:

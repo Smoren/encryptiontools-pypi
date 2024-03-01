@@ -1,6 +1,8 @@
 import json
 import rsa
 
+from encryptiontools.exceptions import SigningError, VerificationError
+
 
 class Signer:
     _private_key: rsa.PrivateKey
@@ -13,8 +15,11 @@ class Signer:
         self._private_key = private_key
 
     def sign(self, data) -> bytes:
-        message = json.dumps(data)
-        return rsa.sign(message.encode(), self._private_key, 'SHA-256')
+        try:
+            message = json.dumps(data)
+            return rsa.sign(message.encode(), self._private_key, 'SHA-256')
+        except Exception as e:
+            raise SigningError(str(e))
 
 
 class Verifier:
@@ -28,5 +33,8 @@ class Verifier:
         self._public_key = public_key
 
     def verify(self, data, signature: bytes):
-        message = json.dumps(data)
-        return rsa.verify(message.encode(), signature, self._public_key)
+        try:
+            message = json.dumps(data)
+            return rsa.verify(message.encode(), signature, self._public_key)
+        except Exception as e:
+            raise VerificationError(str(e))
