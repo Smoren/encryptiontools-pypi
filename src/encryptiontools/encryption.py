@@ -12,45 +12,43 @@ from encryptiontools.exceptions import DecryptionError
 
 
 class AsymmetricEncrypter:
-    public_key: rsa.PublicKey
+    _public_key: rsa.PublicKey
 
     @classmethod
-    def create(cls, pub_key_bytes: bytes) -> "AsymmetricEncrypter":
-        public_key = rsa.PublicKey.load_pkcs1(pub_key_bytes)
-        return cls(public_key)
+    def create(cls, public_key_bytes: bytes) -> "AsymmetricEncrypter":
+        return cls(rsa.PublicKey.load_pkcs1(public_key_bytes))
 
-    def __init__(self, pub_key: rsa.PublicKey):
-        self.public_key = pub_key
+    def __init__(self, public_key: rsa.PublicKey):
+        self._public_key = public_key
 
     def encrypt(self, data) -> bytes:
         str_to_encrypt = json.dumps(data)
         result = []
 
-        batch_size = self.public_key.n.bit_length() // 8 - 11
+        batch_size = self._public_key.n.bit_length() // 8 - 11
         for n in range(0, len(str_to_encrypt), batch_size):
             part = str_to_encrypt[n:n+batch_size]
-            result.append(rsa.encrypt(part.encode("ascii"), self.public_key))
+            result.append(rsa.encrypt(part.encode("ascii"), self._public_key))
         return b''.join(result)
 
 
 class AsymmetricDecrypter:
-    private_key: rsa.PrivateKey
+    _private_key: rsa.PrivateKey
 
     @classmethod
-    def create(cls, priv_key_bytes: bytes) -> "AsymmetricDecrypter":
-        private_key = rsa.PrivateKey.load_pkcs1(priv_key_bytes)
-        return cls(private_key)
+    def create(cls, private_key_bytes: bytes) -> "AsymmetricDecrypter":
+        return cls(rsa.PrivateKey.load_pkcs1(private_key_bytes))
 
-    def __init__(self, priv_key: rsa.PrivateKey):
-        self.private_key = priv_key
+    def __init__(self, private_key: rsa.PrivateKey):
+        self._private_key = private_key
 
     def decrypt(self, data: bytes):
         try:
             result = []
-            batch_size = self.private_key.n.bit_length() // 8
+            batch_size = self._private_key.n.bit_length() // 8
             for n in range(0, len(data), batch_size):
                 part = data[n:n+batch_size]
-                result.append(rsa.decrypt(part, self.private_key).decode("ascii"))
+                result.append(rsa.decrypt(part, self._private_key).decode("ascii"))
             return json.loads(''.join(result))
         except rsa.pkcs1.DecryptionError as e:
             raise DecryptionError(str(e))
@@ -126,8 +124,7 @@ class CombinedDecrypter:
 
     @classmethod
     def create(cls, priv_key_bytes: bytes) -> "CombinedDecrypter":
-        private_key = rsa.PrivateKey.load_pkcs1(priv_key_bytes)
-        return cls(private_key)
+        return cls(rsa.PrivateKey.load_pkcs1(priv_key_bytes))
 
     def __init__(self, private_key: rsa.PrivateKey):
         self._private_key = private_key
