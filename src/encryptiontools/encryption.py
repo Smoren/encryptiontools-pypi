@@ -7,7 +7,8 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding, hashes
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from rsa import DecryptionError
+
+from encryptiontools.exceptions import DecryptionError
 
 
 class AsymmetricEncrypter:
@@ -44,12 +45,15 @@ class AsymmetricDecrypter:
         self.private_key = priv_key
 
     def decrypt(self, data: bytes):
-        result = []
-        batch_size = self.private_key.n.bit_length() // 8
-        for n in range(0, len(data), batch_size):
-            part = data[n:n+batch_size]
-            result.append(rsa.decrypt(part, self.private_key).decode("ascii"))
-        return json.loads(''.join(result))
+        try:
+            result = []
+            batch_size = self.private_key.n.bit_length() // 8
+            for n in range(0, len(data), batch_size):
+                part = data[n:n+batch_size]
+                result.append(rsa.decrypt(part, self.private_key).decode("ascii"))
+            return json.loads(''.join(result))
+        except rsa.pkcs1.DecryptionError as e:
+            raise DecryptionError(str(e))
 
 
 class SymmetricEncrypter:
@@ -80,12 +84,15 @@ class SymmetricEncrypter:
         return ciphertext
 
     def decrypt(self, data: bytes):
-        cipher = Cipher(algorithms.AES(self._key), modes.ECB(), backend=default_backend())
-        decrypter = cipher.decryptor()
-        decrypted_data = decrypter.update(data) + decrypter.finalize()
-        padder = padding.PKCS7(algorithms.AES.block_size).unpadder()
-        unpadded_data = padder.update(decrypted_data) + padder.finalize()
-        return json.loads(unpadded_data.decode())
+        try:
+            cipher = Cipher(algorithms.AES(self._key), modes.ECB(), backend=default_backend())
+            decrypter = cipher.decryptor()
+            decrypted_data = decrypter.update(data) + decrypter.finalize()
+            padder = padding.PKCS7(algorithms.AES.block_size).unpadder()
+            unpadded_data = padder.update(decrypted_data) + padder.finalize()
+            return json.loads(unpadded_data.decode())
+        except Exception as e:
+            raise DecryptionError(str(e))
 
 
 class CombinedEncrypter:
@@ -126,9 +133,12 @@ class CombinedDecrypter:
         self._private_key = private_key
 
     def decrypt(self, data):
-        internal_key_encrypted, data_encrypted = self._parse_prefix(data)
-        internal_key = AsymmetricDecrypter(self._private_key).decrypt(internal_key_encrypted)
-        return SymmetricEncrypter(internal_key.encode()).decrypt(data_encrypted)
+        try:
+            internal_key_encrypted, data_encrypted = self._parse_prefix(data)
+            internal_key = AsymmetricDecrypter(self._private_key).decrypt(internal_key_encrypted)
+            return SymmetricEncrypter(internal_key.encode()).decrypt(data_encrypted)
+        except Exception as e:
+            raise DecryptionError(str(e))
 
     @staticmethod
     def _parse_prefix(data: bytes) -> [bytes, bytes]:
