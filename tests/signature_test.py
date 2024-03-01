@@ -65,7 +65,7 @@ def test_signer_verifier_failure_bad_signature(input_data, key_pair):
 
     signature = signer.sign(input_data)
     sep = len(signature) // 2
-    signature = signature[:sep-1] + random.choice(string.digits).encode() + signature[sep:]
+    signature = signature[:sep] + bytes(signature[sep]+1) + signature[sep+1:]
 
     try:
         verifier.verify(input_data, signature)
