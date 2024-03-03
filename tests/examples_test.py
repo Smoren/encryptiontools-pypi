@@ -49,7 +49,7 @@ def test_combined_encrypter_example():
 def test_sign_and_verify_example():
     private_key, public_key = generate_key_pair(512)
 
-    data = {'message': 'hello combined encryption'}
+    data = {'message': 'hello signing and verification'}
 
     signer = Signer.create(private_key.save_pkcs1())  # or Signer(private_key)
     verifier = Verifier.create(public_key.save_pkcs1())  # or Verifier(public_key)
