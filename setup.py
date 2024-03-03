@@ -7,9 +7,9 @@ setuptools.setup(
     name='encryptiontools',
     author='Smoren',
     author_email='ofigate@gmail.com',
-    description='Tools for encryption/decryption. Symmetric and asymmetric (RSA-based) encryption, '
-                'signing and verification.',
-    keywords='cryptography, encryption, rsa',
+    description='Tools for encryption and decryption, signing and verification. '
+                'Use symmetric and asymmetric (RSA-based) encryption.',
+    keywords='cryptography, encryption, rsa, signing, verification, symmetric, asymmetric',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Smoren/encryptiontools-pypi',
