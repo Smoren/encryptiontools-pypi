@@ -7,7 +7,8 @@ setuptools.setup(
     name='encryptiontools',
     author='Smoren',
     author_email='ofigate@gmail.com',
-    description='Tools for encryption/decryption. Symmetric and asymmetric (RSA-based) encryption.',
+    description='Tools for encryption/decryption. Symmetric and asymmetric (RSA-based) encryption, '
+                'signing and verification.',
     keywords='cryptography, encryption, rsa',
     long_description=long_description,
     long_description_content_type='text/markdown',
