@@ -148,7 +148,7 @@ class SymmetricEncrypter:
 
 class CombinedEncrypter:
     """
-    Encrypt and decrypt data using asymmetric and symmetric keys.
+    Encrypt data using asymmetric and symmetric keys.
 
     Asymmetric key is used to encrypt internal (symmetric) key, internal key is used to encrypt data.
     """
