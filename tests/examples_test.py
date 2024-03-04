@@ -2,11 +2,11 @@ from encryptiontools.signature import Signer, Verifier
 from encryptiontools.encryption import AsymmetricEncrypter, AsymmetricDecrypter, SymmetricEncrypter, CombinedEncrypter, \
     CombinedDecrypter
 from encryptiontools.exceptions import VerificationError
-from encryptiontools.tools import generate_key_pair
+from encryptiontools.utils import generate_key_pair
 
 
 def test_asymmetric_encrypter_example():
-    private_key, public_key = generate_key_pair(512)
+    public_key, private_key = generate_key_pair(512)
 
     data = {'message': 'hello asymmetric encryption'}
 
@@ -33,7 +33,7 @@ def test_symmetric_encrypter_example():
 
 
 def test_combined_encrypter_example():
-    private_key, public_key = generate_key_pair(512)
+    public_key, private_key = generate_key_pair(512)
 
     data = {'message': 'hello combined encryption'}
 
@@ -47,7 +47,7 @@ def test_combined_encrypter_example():
 
 
 def test_sign_and_verify_example():
-    private_key, public_key = generate_key_pair(512)
+    public_key, private_key = generate_key_pair(512)
 
     data = {'message': 'hello signing and verification'}
 

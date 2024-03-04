@@ -10,7 +10,7 @@ from .fixtures import data_provider_for_encryption_input, data_provider_for_key_
 @pytest.mark.parametrize("input_data", data_provider_for_encryption_input())
 @pytest.mark.parametrize("key_pair", data_provider_for_key_pair())
 def test_asymmetric_encrypter(input_data, key_pair):
-    priv_key, pub_key = key_pair
+    pub_key, priv_key = key_pair
 
     encrypter = AsymmetricEncrypter.create(pub_key)
     decrypter = AsymmetricDecrypter.create(priv_key)
@@ -41,7 +41,7 @@ def test_symmetric_encrypter(input_data, key):
 @pytest.mark.parametrize("input_data", data_provider_for_encryption_input())
 @pytest.mark.parametrize("key_pair", data_provider_for_key_pair())
 def test_combined_encrypter(input_data, key_pair):
-    priv_key, pub_key = key_pair
+    pub_key, priv_key = key_pair
 
     encrypter = CombinedEncrypter.create(pub_key)
     decrypter = CombinedDecrypter.create(priv_key)
@@ -57,8 +57,8 @@ def test_combined_encrypter(input_data, key_pair):
 @pytest.mark.parametrize("key_pair_lhs", data_provider_for_key_pair())
 @pytest.mark.parametrize("key_pair_rhs", data_provider_for_key_pair())
 def test_asymmetric_encrypter_failure(input_data, key_pair_lhs, key_pair_rhs):
-    priv_key, _ = key_pair_lhs
-    _, pub_key = key_pair_rhs
+    pub_key, _ = key_pair_lhs
+    _, priv_key = key_pair_rhs
 
     encrypter = AsymmetricEncrypter.create(pub_key)
     decrypter = AsymmetricDecrypter.create(priv_key)
@@ -76,8 +76,8 @@ def test_asymmetric_encrypter_failure(input_data, key_pair_lhs, key_pair_rhs):
 @pytest.mark.parametrize("key_pair_lhs", data_provider_for_key_pair())
 @pytest.mark.parametrize("key_pair_rhs", data_provider_for_key_pair())
 def test_asymmetric_encrypter_failure_broken_data(input_data, key_pair_lhs, key_pair_rhs):
-    priv_key, _ = key_pair_lhs
-    _, pub_key = key_pair_rhs
+    pub_key, _ = key_pair_lhs
+    _, priv_key = key_pair_rhs
 
     encrypter = AsymmetricEncrypter.create(pub_key)
     decrypter = AsymmetricDecrypter.create(priv_key)
@@ -131,8 +131,8 @@ def test_symmetric_encrypter_failure_broken_data(input_data, key):
 @pytest.mark.parametrize("key_pair_lhs", data_provider_for_key_pair())
 @pytest.mark.parametrize("key_pair_rhs", data_provider_for_key_pair())
 def test_combined_encrypter_failure(input_data, key_pair_lhs, key_pair_rhs):
-    priv_key, _ = key_pair_lhs
-    _, pub_key = key_pair_rhs
+    pub_key, _ = key_pair_lhs
+    _, priv_key = key_pair_rhs
 
     encrypter = CombinedEncrypter.create(pub_key)
     decrypter = CombinedDecrypter.create(priv_key)
@@ -150,8 +150,8 @@ def test_combined_encrypter_failure(input_data, key_pair_lhs, key_pair_rhs):
 @pytest.mark.parametrize("key_pair_lhs", data_provider_for_key_pair())
 @pytest.mark.parametrize("key_pair_rhs", data_provider_for_key_pair())
 def test_combined_encrypter_failure_broken_data(input_data, key_pair_lhs, key_pair_rhs):
-    priv_key, _ = key_pair_lhs
-    _, pub_key = key_pair_rhs
+    pub_key, _ = key_pair_lhs
+    _, priv_key = key_pair_rhs
 
     encrypter = CombinedEncrypter.create(pub_key)
     decrypter = CombinedDecrypter.create(priv_key)
