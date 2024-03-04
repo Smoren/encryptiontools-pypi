@@ -2,7 +2,7 @@ import random
 import string
 from typing import Generator, Tuple
 
-from encryptiontools.tools import generate_key_pair
+from encryptiontools.utils import generate_key_pair
 
 
 def data_provider_for_encryption_input() -> Generator[dict, None, None]:
@@ -22,8 +22,8 @@ def data_provider_for_encryption_input() -> Generator[dict, None, None]:
 
 
 def get_key_pair(key_len: int) -> [bytes, bytes]:
-    priv_key, pub_key = generate_key_pair(key_len)
-    return priv_key.save_pkcs1(), pub_key.save_pkcs1()
+    pub_key, priv_key = generate_key_pair(key_len)
+    return pub_key.save_pkcs1(), priv_key.save_pkcs1()
 
 
 def data_provider_for_key_pair(min_degree: int = 7, max_degree: int = 10) -> Generator[Tuple[bytes, bytes], None, None]:

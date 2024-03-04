@@ -20,13 +20,13 @@ pip install encryptiontools
 
 ```python
 from encryptiontools.encryption import AsymmetricEncrypter, AsymmetricDecrypter
-from encryptiontools.tools import generate_key_pair
+from encryptiontools.utils import generate_key_pair
 
-private_key, public_key = generate_key_pair(512)
+public_key, private_key = generate_key_pair(512)
 
 data = {'message': 'hello asymmetric encryption'}
 
-encrypter = AsymmetricEncrypter.create(public_key.save_pkcs1())   # or AsymmetricEncrypter(public_key)
+encrypter = AsymmetricEncrypter.create(public_key.save_pkcs1())  # or AsymmetricEncrypter(public_key)
 decrypter = AsymmetricDecrypter.create(private_key.save_pkcs1())  # or AsymmetricDecrypter(private_key)
 
 encrypted = encrypter.encrypt(data)
@@ -58,13 +58,13 @@ Asymmetric key pair is used to encrypt/decrypt internal (symmetric) key, interna
 
 ```python
 from encryptiontools.encryption import CombinedEncrypter, CombinedDecrypter
-from encryptiontools.tools import generate_key_pair
+from encryptiontools.utils import generate_key_pair
 
-private_key, public_key = generate_key_pair(512)
+public_key, private_key = generate_key_pair(512)
 
 data = {'message': 'hello combined encryption'}
 
-encrypter = CombinedEncrypter.create(public_key.save_pkcs1())   # or CombinedEncrypter(public_key)
+encrypter = CombinedEncrypter.create(public_key.save_pkcs1())  # or CombinedEncrypter(public_key)
 decrypter = CombinedDecrypter.create(private_key.save_pkcs1())  # or CombinedDecrypter(private_key)
 
 encrypted = encrypter.encrypt(data)
@@ -77,21 +77,21 @@ assert decrypted['message'] == 'hello combined encryption'
 
 ```python
 from encryptiontools.signature import Signer, Verifier
-from encryptiontools.tools import generate_key_pair
-from encryptiontools.exceptions import VerificationError 
+from encryptiontools.utils import generate_key_pair
+from encryptiontools.exceptions import VerificationError
 
-private_key, public_key = generate_key_pair(512)
+public_key, private_key = generate_key_pair(512)
 
 data = {'message': 'hello signing and verification'}
 
-signer = Signer.create(private_key.save_pkcs1())     # or Signer(private_key)
+signer = Signer.create(private_key.save_pkcs1())  # or Signer(private_key)
 verifier = Verifier.create(public_key.save_pkcs1())  # or Verifier(public_key)
 
 signature = signer.sign(data)
 
 try:
-    verifier.verify(data, signature)
-    assert True
+  verifier.verify(data, signature)
+  assert True
 except VerificationError:
-    assert False
+  assert False
 ```
